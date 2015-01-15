@@ -76,6 +76,9 @@ else()
     add_library(bloom_filter SHARED ${LUA_BLOOM_FILTER_SRC})
 endif()
 
-set_target_properties(bloom_filter PROPERTIES PREFIX "")
+if (NOT LUA_SANDBOX_INCLUDE)
+	set_target_properties(bloom_filter PROPERTIES PREFIX "")
+endif()
+
 install(TARGETS bloom_filter DESTINATION lib)
 add_test(test lua ${CMAKE_SOURCE_DIR}/test.lua)
