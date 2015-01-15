@@ -165,13 +165,12 @@ static int bloom_filter_fromstring(lua_State* lua)
 #ifdef LUA_SANDBOX
 static int
 serialize_bloom_filter(lua_State *lua) {
-  output_data* output = (output_data*)lua_touserdata(lua, -1);
+  lsb_output_data* output = (lsb_output_data*)lua_touserdata(lua, -1);
   const char *key = (const char*)lua_touserdata(lua, -2);
   bloom_filter* bf = (bloom_filter*)lua_touserdata(lua, -3);
   if (!(output && key && bf)) {
     return 0;
   }
-  output->pos = 0;
   if (lsb_appendf(output,
                   "if %s == nil then %s = bloom_filter.new(%d, %g) end\n",
                   key,
