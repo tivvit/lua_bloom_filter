@@ -6,8 +6,6 @@
 
 /** @brief Lua bloom_filter implementation @file */
 
-#include "lua_bloom_filter.h"
-
 #include <lauxlib.h>
 #include <limits.h>
 #include <lua.h>
@@ -21,8 +19,19 @@
 #include "lsb_serialize.h"
 #endif
 
-const char* mozsvc_bloom_filter = "mozsvc.bloom_filter";
-const char* mozsvc_bloom_filter_table = "bloom_filter";
+#ifdef _WIN32
+#ifdef lua_bloom_filter_EXPORTS
+#define  LBF_EXPORT __declspec(dllexport)
+#else
+#define  LBF_EXPORT __declspec(dllimport)
+#endif
+#else
+#define LBF_EXPORT
+#endif
+
+LBF_EXPORT int luaopen_bloom_filter(lua_State* lua);
+
+static const char* mozsvc_bloom_filter = "mozsvc.bloom_filter";
 
 typedef struct bloom_filter
 {
@@ -219,6 +228,6 @@ int luaopen_bloom_filter(lua_State* lua)
   lua_pushvalue(lua, -1);
   lua_setfield(lua, -2, "__index");
   luaL_register(lua, NULL, bloom_filterlib_m);
-  luaL_register(lua, mozsvc_bloom_filter_table, bloom_filterlib_f);
+  luaL_register(lua, "bloom_filter", bloom_filterlib_f);
   return 1;
 }

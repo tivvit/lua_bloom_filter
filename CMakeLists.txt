@@ -61,29 +61,16 @@ lua_bloom_filter.c
 xxhash.c
 )
 
-if(LIB_TYPE STREQUAL "STATIC")
-    add_library(bloom_filter STATIC ${LUA_BLOOM_FILTER_SRC})
-    if (LUA_SANDBOX_INCLUDE)
-        install(FILES lua_bloom_filter.h DESTINATION include)
-    endif()
-    install(TARGETS bloom_filter DESTINATION lib)
-else()
-    add_library(bloom_filter SHARED ${LUA_BLOOM_FILTER_SRC})
-    if (LUA_SANDBOX_INCLUDE)
-        # add the lsb prefix to avoid confusion with the standard lib
-        set_target_properties(bloom_filter PROPERTIES PREFIX "lsb")
-        install(TARGETS bloom_filter DESTINATION modules)
-    else()
-        # remove the prefix to work with the default Lua cpath
-        set_target_properties(bloom_filter PROPERTIES PREFIX "")
-        install(TARGETS bloom_filter DESTINATION lib)
-    endif()
-endif()
+add_library(bloom_filter SHARED ${LUA_BLOOM_FILTER_SRC})
 
+# remove the prefix to work with the default Lua cpath
+set_target_properties(bloom_filter PROPERTIES PREFIX "")
 if(LUA_SANDBOX_INCLUDE)
     target_link_libraries(bloom_filter ${LUA_LIBRARIES} ${LUA_SANDBOX_LIBRARIES})
+	install(TARGETS bloom_filter DESTINATION modules)
 else()
     target_link_libraries(bloom_filter ${LUA_LIBRARIES})
+    install(TARGETS bloom_filter DESTINATION lib)
 endif()
 
 if(MSVC)
