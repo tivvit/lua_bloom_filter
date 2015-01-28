@@ -19,18 +19,6 @@
 #include "lsb_serialize.h"
 #endif
 
-#ifdef _WIN32
-#ifdef lua_bloom_filter_EXPORTS
-#define  LBF_EXPORT __declspec(dllexport)
-#else
-#define  LBF_EXPORT __declspec(dllimport)
-#endif
-#else
-#define LBF_EXPORT
-#endif
-
-LBF_EXPORT int luaopen_bloom_filter(lua_State* lua);
-
 static const char* mozsvc_bloom_filter = "mozsvc.bloom_filter";
 
 typedef struct bloom_filter
@@ -171,6 +159,13 @@ static int bloom_filter_fromstring(lua_State* lua)
 }
 
 
+static int bloom_filter_version(lua_State* lua)
+{
+  lua_pushstring(lua, DIST_VERSION);
+  return 1;
+}
+
+
 #ifdef LUA_SANDBOX
 static int
 serialize_bloom_filter(lua_State *lua) {
@@ -203,7 +198,9 @@ serialize_bloom_filter(lua_State *lua) {
 
 static const struct luaL_reg bloom_filterlib_f[] =
 {
-  { "new", bloom_filter_new }, { NULL, NULL }
+  { "new", bloom_filter_new }
+  , { "version", bloom_filter_version }
+  , { NULL, NULL }
 };
 
 

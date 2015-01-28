@@ -3,6 +3,7 @@
 -- file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 require "bloom_filter"
+assert(bloom_filter.version() == "0.1.0", bloom_filter.version())
 
 local errors = {
     function() local bf = bloom_filter.new(2) end, -- new() incorrect # args

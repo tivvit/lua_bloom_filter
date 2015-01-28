@@ -13,33 +13,20 @@ A Bloom filter is a space-efficient probabilistic data structure that is used to
 
 ### CMake Build
 
-#### lua_bloom_filter  - UNIX Build Instructions
+#### lua_bloom_filter - Build Instructions
 
     git clone https://github.com/mozilla-services/lua_bloom_filter.git
     cd lua_bloom_filter 
     mkdir release
     cd release
+    
+    # UNIX
     cmake -DCMAKE_BUILD_TYPE=release ..
-    make install
+    # Windows Visual Studio 2013
+    cmake -DCMAKE_BUILD_TYPE=release -G "NMake Makefiles" ..
 
     ctest
-
-#### lua_bloom_filter  - Windows Build Instructions
-
-    # in a VS2013 command prompt window
-
-    git clone https://github.com/mozilla-services/lua_bloom_filter.git
-    cd lua_hyperloglog 
-    mkdir release
-    cd release
-    cmake -DCMAKE_BUILD_TYPE=release -G "NMake Makefiles" ..
-    nmake install
-
-    # To run the tests you must install
-    cmake -DCMAKE_INSTALL_PREFIX="" ..
-    nmake install DESTDIR=test
-    cd ..\src\test
-    ..\..\release\test\lib\test_lua_bloom_filter.exe
+    cpack
 
 ## Module
 
@@ -73,6 +60,21 @@ globally registered and returned by the require function.
 *Return*
 - bloom_filter userdata object.
 
+#### version
+```lua
+require "bloom_filter"
+local v = bloom_filter.version()
+-- v == "0.1.0"
+```
+
+Returns a string with the running version of bloom_filter.
+
+*Arguments*
+- none
+
+*Return*
+- Semantic version string
+
 ### API Methods
 
 #### add
@@ -93,7 +95,7 @@ Adds an item to the bloom filter.
 local found = bf:query(key)
 ```
 
-Checks for the existence of an item in the bloom filter.
+Checks for the existence of the key in the bloom filter.
 
 *Arguments*
 - key (string/number) The key to lookup in the bloom filter.
