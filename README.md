@@ -11,9 +11,7 @@ A Bloom filter is a space-efficient probabilistic data structure that is used to
 * Lua 5.1, Lua 5.2, or LuaJIT
 * [CMake (2.8.7+)](http://cmake.org/cmake/resources/software.html)
 
-### CMake Build
-
-#### lua_bloom_filter - Build Instructions
+### CMake Build Instructions
 
     git clone https://github.com/mozilla-services/lua_bloom_filter.git
     cd lua_bloom_filter 
