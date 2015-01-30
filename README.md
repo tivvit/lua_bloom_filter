@@ -22,8 +22,11 @@ A Bloom filter is a space-efficient probabilistic data structure that is used to
     
     # UNIX
     cmake -DCMAKE_BUILD_TYPE=release ..
+    make
+
     # Windows Visual Studio 2013
     cmake -DCMAKE_BUILD_TYPE=release -G "NMake Makefiles" ..
+    nmake
 
     ctest
     cpack
