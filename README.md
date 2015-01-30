@@ -79,7 +79,7 @@ Returns a string with the running version of bloom_filter.
 
 #### add
 ```lua
-local added = bloom:add(key)
+local added = bf:add(key)
 ```
 
 Adds an item to the bloom filter.
