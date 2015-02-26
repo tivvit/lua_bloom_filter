@@ -35,7 +35,7 @@ A Bloom filter is a space-efficient probabilistic data structure that is used to
 ```lua
 require "bloom_filter"
 
-local bf = bloom_filter.new()
+local bf = bloom_filter.new(1000, 0.01)
 local found = bf:query("test")
 -- found == false
 bf:add("test")
@@ -48,7 +48,7 @@ found = bf:query("test")
 #### new
 ```lua
 require "bloom_filter"
-local bf = bloom_filter.new()
+local bf = bloom_filter.new(1000, 0.01)
 ```
 
 Import the Lua _bloom_filter_ via the Lua 'require' function. The module is
