@@ -26,9 +26,10 @@ typedef struct bloom_filter
   size_t items;
   size_t bytes;
   size_t bits;
+  size_t cnt;
   unsigned int hashes;
   double probability;
-  char data[];
+  unsigned char data[];
 } bloom_filter;
 
 
@@ -52,6 +53,7 @@ static int bloom_filter_new(lua_State* lua)
   bf->bytes = bytes;
   bf->hashes = hashes;
   bf->probability = probability;
+  bf->cnt = 0;
   memset(bf->data, 0, bf->bytes);
 
   luaL_getmetatable(lua, mozsvc_bloom_filter);
@@ -101,6 +103,10 @@ static int bloom_filter_add(lua_State* lua)
     }
   }
 
+  if (added) {
+    ++bf->cnt;
+  }
+
   lua_pushboolean(lua, added);
   return 1;
 }
@@ -138,10 +144,19 @@ static int bloom_filter_query(lua_State* lua)
 }
 
 
+static int bloom_filter_count(lua_State* lua)
+{
+  bloom_filter* bf = check_bloom_filter(lua, 1);
+  lua_pushnumber(lua, bf->cnt);
+  return 1;
+}
+
+
 static int bloom_filter_clear(lua_State* lua)
 {
   bloom_filter* bf = check_bloom_filter(lua, 1);
   memset(bf->data, 0, bf->bytes);
+  bf->cnt = 0;
   return 0;
 }
 
@@ -209,6 +224,7 @@ static const struct luaL_reg bloom_filterlib_m[] =
   { "add", bloom_filter_add }
   , { "query", bloom_filter_query }
   , { "clear", bloom_filter_clear }
+  , { "count", bloom_filter_count }
   , { "fromstring", bloom_filter_fromstring } // used for data restoration
   , { NULL, NULL }
 };

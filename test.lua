@@ -3,7 +3,7 @@
 -- file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 require "bloom_filter"
-assert(bloom_filter.version() == "0.1.0", bloom_filter.version())
+assert(bloom_filter.version() == "0.2.0", bloom_filter.version())
 
 local errors = {
     function() local bf = bloom_filter.new(2) end, -- new() incorrect # args
@@ -47,11 +47,31 @@ for i, v in ipairs(errors) do
     if ok then error(string.format("error test %d failed\n", i)) end
 end
 
-bf = bloom_filter.new(20, 0.01)
-assert(not bf:query("one"), "bloom filter should be empty")
-assert(bf:add("one"), "insert failed")
-assert(bf:add("two"), "insert failed")
-assert(bf:query("one"), "bloom filter should contain 'one'")
-assert(bf:query("two"), "bloom filter should contain 'two'")
+bf = bloom_filter.new(1000, 0.01)
+local test_items = 950
+
+-- test numbers
+assert(bf:count() == 0, "bloom filter should be empty")
+assert(not bf:query(1), "bloom filter should be empty")
+for i=1, test_items do
+    assert(bf:add(i), "insert failed")
+end
+for i=1, test_items do
+    assert(bf:query(i), "query failed")
+end
+assert(bf:count() == test_items, "count=" .. bf:count())
 bf:clear()
-assert(not bf:query("one"), "bloom filter should be empty")
+assert(bf:count() == 0, "bloom filter should be empty")
+assert(not bf:query(1), "bloom filter should be empty")
+
+-- test strings
+for i=1, test_items do
+    assert(bf:add(tostring(i)), "insert failed")
+end
+for i=1, test_items do
+    assert(bf:query(tostring(i)), "query failed")
+end
+assert(bf:count() == test_items, "count=" .. bf:count())
+bf:clear()
+assert(bf:count() == 0, "bloom filter should be empty")
+assert(not bf:query("1"), "bloom filter should be empty")

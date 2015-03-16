@@ -104,6 +104,19 @@ Checks for the existence of the key in the bloom filter.
 *Return*
 - True if the key exists, false if it doesn't.
 
+#### count
+```lua
+local added = bf:count()
+```
+
+Returns the number of items in the bloom.
+
+*Arguments*
+- none
+
+*Return*
+- Returns the number of distinct items added to the set.
+
 #### clear
 ```lua
 bf:clear()
