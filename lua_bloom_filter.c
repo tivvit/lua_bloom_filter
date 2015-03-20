@@ -163,9 +163,18 @@ static int bloom_filter_clear(lua_State* lua)
 
 static int bloom_filter_fromstring(lua_State* lua)
 {
-  bloom_filter* bf = check_bloom_filter(lua, 2);
   size_t len = 0;
-  const char* values = luaL_checklstring(lua, 2, &len);
+  const char* values = NULL;
+  bloom_filter* bf = NULL;
+
+  if (lua_gettop(lua) == 2) { // todo remove conditional check after migration
+    bf = check_bloom_filter(lua, 2);
+    values = luaL_checklstring(lua, 2, &len);
+  } else {
+    bf = check_bloom_filter(lua, 3);
+    bf->cnt = (size_t)luaL_checknumber(lua, 2);
+    values = luaL_checklstring(lua, 3, &len);
+  }
   if (len != bf->bytes) {
     luaL_error(lua, "fromstring() bytes found: %d, expected %d", len, bf->bytes);
   }
@@ -191,15 +200,15 @@ serialize_bloom_filter(lua_State *lua) {
     return 0;
   }
   if (lsb_appendf(output,
-                  "if %s == nil then %s = bloom_filter.new(%d, %g) end\n",
+                  "if %s == nil then %s = bloom_filter.new(%u, %g) end\n",
                   key,
                   key,
-                  bf->items,
+                  (unsigned)bf->items,
                   bf->probability)) {
     return 1;
   }
 
-  if (lsb_appendf(output, "%s:fromstring(\"", key)) {
+  if (lsb_appendf(output, "%s:fromstring(%u, \"", key, (unsigned)bf->cnt)) {
     return 1;
   }
   if (lsb_serialize_binary(bf->data, bf->bytes, output)) return 1;
