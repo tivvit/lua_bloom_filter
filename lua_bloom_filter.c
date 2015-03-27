@@ -6,12 +6,12 @@
 
 /** @brief Lua bloom_filter implementation @file */
 
-#include <lauxlib.h>
 #include <limits.h>
-#include <lua.h>
 #include <math.h>
 #include <string.h>
 
+#include "lauxlib.h"
+#include "lua.h"
 #include "xxhash.h"
 
 #ifdef LUA_SANDBOX
