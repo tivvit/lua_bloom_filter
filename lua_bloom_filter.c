@@ -15,8 +15,8 @@
 #include "xxhash.h"
 
 #ifdef LUA_SANDBOX
-#include "lsb_output.h"
-#include "lsb_serialize.h"
+#include "luasandbox_output.h"
+#include "luasandbox_serialize.h"
 #endif
 
 static const char* mozsvc_bloom_filter = "mozsvc.bloom_filter";
