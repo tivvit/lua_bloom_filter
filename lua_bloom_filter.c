@@ -147,7 +147,7 @@ static int bloom_filter_query(lua_State* lua)
 static int bloom_filter_count(lua_State* lua)
 {
   bloom_filter* bf = check_bloom_filter(lua, 1);
-  lua_pushnumber(lua, bf->cnt);
+  lua_pushnumber(lua, (lua_Number)bf->cnt);
   return 1;
 }
 
