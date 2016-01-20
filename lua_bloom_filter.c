@@ -193,13 +193,13 @@ static int bloom_filter_version(lua_State* lua)
 #ifdef LUA_SANDBOX
 static int
 serialize_bloom_filter(lua_State *lua) {
-  lsb_output_data* output = (lsb_output_data*)lua_touserdata(lua, -1);
-  const char *key = (const char*)lua_touserdata(lua, -2);
-  bloom_filter* bf = (bloom_filter*)lua_touserdata(lua, -3);
-  if (!(output && key && bf)) {
-    return 0;
+  lsb_output_buffer* ob = lua_touserdata(lua, -1);
+  const char *key = lua_touserdata(lua, -2);
+  bloom_filter* bf = lua_touserdata(lua, -3);
+  if (!(ob && key && bf)) {
+    return 1;
   }
-  if (lsb_appendf(output,
+  if (lsb_outputf(ob,
                   "if %s == nil then %s = bloom_filter.new(%u, %g) end\n",
                   key,
                   key,
@@ -208,11 +208,11 @@ serialize_bloom_filter(lua_State *lua) {
     return 1;
   }
 
-  if (lsb_appendf(output, "%s:fromstring(%u, \"", key, (unsigned)bf->cnt)) {
+  if (lsb_outputf(ob, "%s:fromstring(%u, \"", key, (unsigned)bf->cnt)) {
     return 1;
   }
-  if (lsb_serialize_binary(bf->data, bf->bytes, output)) return 1;
-  if (lsb_appends(output, "\")\n", 3)) {
+  if (lsb_serialize_binary(ob, bf->data, bf->bytes)) return 1;
+  if (lsb_outputs(ob, "\")\n", 3)) {
     return 1;
   }
   return 0;

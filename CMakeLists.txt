@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 project ( lua_bloom_filter C )
-cmake_minimum_required ( VERSION 2.8 )
+cmake_minimum_required ( VERSION 3.0 )
 include ( cmake/dist.cmake )
 include ( lua )
 
