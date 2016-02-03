@@ -152,6 +152,38 @@ static int bloom_filter_count(lua_State* lua)
 }
 
 
+static int bloom_filter_probability(lua_State* lua)
+{
+  bloom_filter* bf = check_bloom_filter(lua, 1);
+  lua_pushnumber(lua, (lua_Number)bf->probability);
+  return 1;
+}
+
+
+static int bloom_filter_items(lua_State* lua)
+{
+  bloom_filter* bf = check_bloom_filter(lua, 1);
+  lua_pushnumber(lua, (lua_Number)bf->items);
+  return 1;
+}
+
+
+static int bloom_filter_bytes(lua_State* lua)
+{
+  bloom_filter* bf = check_bloom_filter(lua, 1);
+  lua_pushnumber(lua, (lua_Number)bf->bytes);
+  return 1;
+}
+
+
+static int bloom_filter_tostring(lua_State* lua)
+{
+  bloom_filter* bf = check_bloom_filter(lua, 1);
+  lua_pushlstring(lua, (const char*)bf->data, bf->bytes);
+  return 1;
+}
+
+
 static int bloom_filter_clear(lua_State* lua)
 {
   bloom_filter* bf = check_bloom_filter(lua, 1);
@@ -235,6 +267,10 @@ static const struct luaL_reg bloom_filterlib_m[] =
   , { "clear", bloom_filter_clear }
   , { "count", bloom_filter_count }
   , { "fromstring", bloom_filter_fromstring } // used for data restoration
+  , { "tostring", bloom_filter_tostring }
+  , { "items", bloom_filter_items }
+  , { "probability", bloom_filter_probability }
+  , { "bytes", bloom_filter_bytes }
   , { NULL, NULL }
 };
 
